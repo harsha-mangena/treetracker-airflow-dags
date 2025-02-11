@@ -14,7 +14,7 @@ def contract_earnings_fcc_term(conn, start_date, end_date):
       freetown_base_contract_consolidation_uuid = "a2dc79ec-4556-4cc5-bff1-2dbb5fd35b51"
 
       # REVISE add sub org uuid
-      sql = f"""
+      sql = """
 select * from (
 SELECT COUNT(tree_id) capture_count,
         person_id,
@@ -41,11 +41,11 @@ SELECT COUNT(tree_id) capture_count,
             select entity_id from getEntityRelationshipChildren(178)
           )
           AND time_created >= TO_TIMESTAMP(
-            '{start_date}',
+            ?,
             'YYYY-MM-DD HH24:MI:SS'
           )
           AND time_created <  TO_TIMESTAMP(
-            '{end_date}',
+            ?,
             'YYYY-MM-DD HH24:MI:SS'
           )
           AND trees.approved = true
@@ -62,14 +62,14 @@ select stakeholder_uuid as sub_org_stakeholder_uuid, planter_id from (
 
       print("sql to run:", sql)
 
-      cursor.execute(sql);
+      cursor.execute(sql, (start_date, end_date, ));
       print("SQL result:", cursor.query)
       print("result count:", cursor.rowcount)
       for row in cursor:
           print(row)
 
           #calculate the earnings based on FCC logic
-          multiplier = (row['capture_count'] - row['capture_count'] % 100) / 10 / 100
+          multiplier = (row['capture_count'] - row['capture_count']) / 10 / 100
           if multiplier > 1: 
             multiplier = 1
           print( "multiplier " + str(multiplier) )

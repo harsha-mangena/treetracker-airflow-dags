@@ -79,7 +79,7 @@ def earning_export(conn, start_date, end_date, ckan_config):
 'status',                      
 'batch_id',]
 
-    sql = f"""
+    sql = """
 SELECT 
     id,
     worker_id,                 
@@ -101,13 +101,13 @@ SELECT
     batch_id
 FROM earnings.earnings 
 WHERE
-paid_at > '{start_date} 00:00'
-AND paid_at < '{end_date} 23:59'
+paid_at > ?
+AND paid_at < ?
         """;
 
     print("SQL:", sql)
     # execute query
-    cur.execute(sql)
+    cur.execute(sql, ('{0} 00:00'.format(start_date), '{0} 23:59'.format(end_date), ))
     rows = cur.fetchall()
     lines = [','.join(columns)]
     # print rows
