@@ -28,8 +28,8 @@ def earning_export(conn, start_date, end_date, ckan_config):
     url = f"{ckan_config['CKAN_DOMAIN']}/api/3/action/package_show?id={ckan_config['CKAN_DATASET_NAME_EARNING_DATA']}"
     print("url:", url)
     response = requests.get(url,
-        headers={"X-CKAN-API-Key": ckan_config['CKAN_API_KEY']}
-    )
+        headers={"X-CKAN-API-Key": ckan_config['CKAN_API_KEY']}, 
+    timeout=60)
     print ('response:', response)
     # throw an error if the resource is not found
     package_data = response.json()
@@ -143,9 +143,9 @@ AND paid_at < '{end_date} 23:59'
             'webstore_url': None,
             },
         headers={"X-CKAN-API-Key": ckan_config['CKAN_API_KEY']},
-        files={'upload': (file_name, f)}
+        files={'upload': (file_name, f)}, 
         # files={'report.xls': f}
-    )
+    timeout=60)
     # read responce from server
     print ("response:", response)
     print ("response.text:", response.text)

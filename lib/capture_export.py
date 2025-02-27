@@ -20,8 +20,8 @@ def capture_export(conn, date, organization_id, ckan_config):
     url = f"{ckan_config['CKAN_DOMAIN']}/api/3/action/package_show?id={ckan_config['CKAN_DATASET_NAME']}"
     print("url:", url)
     response = requests.get(url,
-        headers={"X-CKAN-API-Key": ckan_config['CKAN_API_KEY']}
-    )
+        headers={"X-CKAN-API-Key": ckan_config['CKAN_API_KEY']}, 
+    timeout=60)
     print ('response:', response)
     # throw an error if the resource is not found
     package_data = response.json()
@@ -179,8 +179,8 @@ def capture_export(conn, date, organization_id, ckan_config):
         response = requests.post(url,
             headers={"X-CKAN-API-Key": ckan_config['CKAN_API_KEY']},
             files=files,
-            data=data
-        )
+            data=data, 
+        timeout=60)
         print ('response:', response)
 
         # delete the file
