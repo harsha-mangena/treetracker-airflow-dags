@@ -2,6 +2,7 @@ import io
 import requests
 import os
 import csv
+from security import safe_requests
 
 def capture_export(conn, date, organization_id, ckan_config):
     """Prints a message with the current time"""
@@ -19,7 +20,7 @@ def capture_export(conn, date, organization_id, ckan_config):
     # get the resource list from CKAN
     url = f"{ckan_config['CKAN_DOMAIN']}/api/3/action/package_show?id={ckan_config['CKAN_DATASET_NAME']}"
     print("url:", url)
-    response = requests.get(url,
+    response = safe_requests.get(url,
         headers={"X-CKAN-API-Key": ckan_config['CKAN_API_KEY']}
     )
     print ('response:', response)
