@@ -70,7 +70,7 @@ def capture_export(conn, date, organization_id, ckan_config):
         FROM trees 
         JOIN planter
         ON trees.planter_id = planter.id
-        WHERE time_created <= '{date}' 
+        WHERE time_created <= ? 
         AND planter.organization_id IN (
             select entity_id from getEntityRelationshipChildren({organization_id})
         )
@@ -78,7 +78,7 @@ def capture_export(conn, date, organization_id, ckan_config):
 
     print("SQL:", sql)
     # execute query
-    cur.execute(sql)
+    cur.execute(sql, (date, ))
     import datetime
     # create a new file with a timestamp in the filename
     date = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -89,7 +89,6 @@ def capture_export(conn, date, organization_id, ckan_config):
 
     # initialize the file and row counters
     file_counter = 1
-    row_counter = 0
     file_list = []
 
     # Open the CSV file in write mode with newline=''
@@ -102,9 +101,6 @@ def capture_export(conn, date, organization_id, ckan_config):
         
         # Execute the query and fetch the first batch of rows
         rows = cur.fetchmany(1000)
-        
-        # Loop through the rows and write them to the CSV file
-        row_counter = 0
         file_counter = 1
 
         while rows:
@@ -123,9 +119,6 @@ def capture_export(conn, date, organization_id, ckan_config):
                     f = open(new_file_name, 'w', newline='')
                     writer = csv.writer(f)
                     writer.writerow(columns)
-
-                    # Reset the row counter and increment the file counter
-                    row_counter = 0
                     file_counter += 1
 
             # Fetch the next batch of rows

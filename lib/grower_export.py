@@ -13,7 +13,7 @@ def grower_export(conn, date, organization_id, ckan_config):
     
     # check organization_id is int
     if not isinstance(organization_id, int):
-      msg = f'organization_id must be int';
+      msg = 'organization_id must be int';
       raise ValueError(msg)
     
     import datetime 
@@ -66,7 +66,7 @@ LEFT JOIN
   planter_registrations pr
 ON pr.planter_id = p.id
 WHERE
-  pr.created_at < '{date}'
+  pr.created_at < ?
   AND p.organization_id IN (
     select entity_id from getEntityRelationshipChildren({organization_id})
   )
@@ -76,7 +76,7 @@ LIMIT 20;
 
     print("SQL:", sql)
     # execute query
-    cur.execute(sql)
+    cur.execute(sql, (date, ))
     # fetch all rows
     rows = cur.fetchall()
     lines = [','.join(columns)]
