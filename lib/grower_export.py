@@ -27,8 +27,8 @@ def grower_export(conn, date, organization_id, ckan_config):
     url = f"{ckan_config['CKAN_DOMAIN']}/api/3/action/package_show?id={ckan_config['CKAN_DATASET_NAME_GROWER_DATA']}"
     print("url:", url)
     response = requests.get(url,
-        headers={"X-CKAN-API-Key": ckan_config['CKAN_API_KEY']}
-    )
+        headers={"X-CKAN-API-Key": ckan_config['CKAN_API_KEY']}, 
+    timeout=60)
     print ('response:', response)
     # throw an error if the resource is not found
     package_data = response.json()
@@ -121,9 +121,9 @@ LIMIT 20;
                 'webstore_url': None,
               },
             headers={"X-CKAN-API-Key": ckan_config['CKAN_API_KEY']},
-            files={'upload': (file_name, f)}
+            files={'upload': (file_name, f)}, 
             # files={'report.xls': f}
-        )
+        timeout=60)
         # read responce from server
         print ("r:", r)
         print ("r.text:", r.text)

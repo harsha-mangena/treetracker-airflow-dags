@@ -15,7 +15,7 @@ def slack_message(message=''):
   """
   url = Variable.get('SLACK_WEBHOOK')
   myobj = {'text': message}
-  x = requests.post(url, json = myobj)
+  x = requests.post(url, json = myobj, timeout=60)
 
 def on_failure_callback(context):
     """Sends a message to Slack if this DAG fails.
