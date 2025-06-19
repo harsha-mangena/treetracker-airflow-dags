@@ -3,6 +3,7 @@ import io
 import requests
 import os
 import urllib.request as urllib2
+from security import safe_requests
 
 def earning_export(conn, start_date, end_date, ckan_config):
     """Prints a message with the current time"""
@@ -27,7 +28,7 @@ def earning_export(conn, start_date, end_date, ckan_config):
     # get the resource list from CKAN
     url = f"{ckan_config['CKAN_DOMAIN']}/api/3/action/package_show?id={ckan_config['CKAN_DATASET_NAME_EARNING_DATA']}"
     print("url:", url)
-    response = requests.get(url,
+    response = safe_requests.get(url,
         headers={"X-CKAN-API-Key": ckan_config['CKAN_API_KEY']}
     )
     print ('response:', response)
